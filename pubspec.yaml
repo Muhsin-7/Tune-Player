@@ -1,0 +1,37 @@
+name: tune_player
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  on_audio_query: any
+  permission_handler: ^11.3.1
+  hive_flutter: any
+  just_audio: any
+  shared_preferences: ^2.3.5
+  audio_service: ^0.18.17
+  flutter_miniplayer: ^1.0.1
+  just_audio_background: ^0.0.1-beta.15
+    
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  hive_generator: any
+  build_runner: any
+  flutter_launcher_icons: ^0.14.3
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_logo.jpg" 
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/app_logo.jpg"
+
+
+flutter:
+  uses-material-design: true
