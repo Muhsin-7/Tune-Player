@@ -194,7 +194,6 @@ class _MyWidgetState extends State<Recentlyplayed> {
           : ListView.builder(
               itemCount: _filteredSongs.length,
               itemBuilder: (context, index) {
-                final song = _filteredSongs[index];
                 return SongTile(
                                     song: _filteredSongs[index],
                                     songs: _filteredSongs,

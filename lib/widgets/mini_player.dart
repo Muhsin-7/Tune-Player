@@ -15,6 +15,7 @@ class MiniPlayerWidget extends StatefulWidget {
   const MiniPlayerWidget({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MiniPlayerWidgetState createState() => _MiniPlayerWidgetState();
 }
 

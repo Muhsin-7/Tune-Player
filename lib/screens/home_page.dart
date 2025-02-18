@@ -21,7 +21,7 @@ class _HomepageState extends State<Homepage> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   List<HiveSong> _songs = [];
   List<HiveSong> queue = [];
-  List<SongModel> _filteredSongs = [];
+  List<HiveSong> _filteredSongs = [];
 
   @override
   void initState() {
@@ -32,11 +32,11 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _filterSongs(String query) {
-    List<SongModel> filtered = _songs
+    List<HiveSong> filtered = _songs
         .where((song) =>
             song.title.toLowerCase().contains(query.toLowerCase()) ||
             (song.title.toLowerCase()).contains(query.toLowerCase()))
-        .cast<SongModel>()
+        .cast<HiveSong>()
         .toList();
     setState(() {
       _filteredSongs = filtered;
@@ -249,20 +249,21 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: "Tune",
-          leading: Icon(Icons.headphones),
-          actions: [],
-          automaticimply: false,
-          centerTitle: true,
-          onSearchChanged: _filterSongs,
-          onSearchClosed: _resetSearch,
-        ),
-        body: Stack(children: [
+@override
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: Scaffold(
+      appBar: CustomAppBar(
+        title: "Tune",
+        leading: Icon(Icons.headphones),
+        actions: [],
+        automaticimply: false,
+        centerTitle: true,
+        onSearchChanged: _filterSongs,
+        onSearchClosed: _resetSearch,
+      ),
+      body: Stack(
+        children: [
           Column(
             children: [
               Expanded(
@@ -270,11 +271,9 @@ class _HomepageState extends State<Homepage> {
                     ? ListView.builder(
                         itemCount: _filteredSongs.length,
                         itemBuilder: (context, index) {
-                          List<HiveSong> hiveSongs0 =
-                              convertToHiveSongs(_filteredSongs);
                           return SongTile(
-                            song: hiveSongs0[index],
-                            songs: hiveSongs0,
+                            song: _filteredSongs[index],
+                            songs: _filteredSongs,
                             index: index,
                             onMoreOptions: (context, song) {
                               _showMoreOptions(context, song);
@@ -283,44 +282,46 @@ class _HomepageState extends State<Homepage> {
                           );
                         },
                       )
-                    : Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: _songs.length,
-                              itemBuilder: (context, index) {
-                                return SongTile(
-                                    song: _songs[index],
-                                    songs: _songs,
-                                    index: index,
-                                    onMoreOptions: (context, song) {
-                                      _showMoreOptions(context, song);
-                                    },
-                                    onSongTap: (index, _songs) {
-                                      // Update playlist and play the selected song
-                                      PlayerController.songsNotifier.value =
-                                          List.from(_songs);
-                                      PlayerController.songsNotifier
-                                          .notifyListeners();
-
-                                      // Set the selected song index
-                                      PlayerController.currentIndex.value =
-                                          index;
-
-                                      // Play the selected song
-                                      PlayerController.setSong(_songs[index]);
-                                    });
-                              },
+                    : _songs.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No songs found",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
                             ),
-                            // MiniPlayer (only shown when there's a song playing)
+                          )
+                        : ListView.builder(
+                            itemCount: _songs.length,
+                            itemBuilder: (context, index) {
+                              return SongTile(
+                                song: _songs[index],
+                                songs: _songs,
+                                index: index,
+                                onMoreOptions: (context, song) {
+                                  _showMoreOptions(context, song);
+                                },
+                                onSongTap: (index, songs) {
+                                  // Update playlist and play the selected song
+                                  PlayerController.songsNotifier.value =
+                                      List.from(songs);
+                                  PlayerController.songsNotifier
+                                      .notifyListeners();
+
+                                  // Set the selected song index
+                                  PlayerController.currentIndex.value = index;
+
+                                  // Play the selected song
+                                  PlayerController.setSong(songs[index]);
+                                },
+                              );
+                            },
                           ),
-                        ],
-                      ),
               ),
             ],
           ),
-        ]),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

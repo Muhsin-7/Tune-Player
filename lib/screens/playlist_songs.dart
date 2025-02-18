@@ -239,7 +239,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
                   width: 500,
                   child: hasSongs
                       ? QueryArtworkWidget(
-                          id: widget.songs!.last.id,
+                          id: widget.songs.last.id,
                           type: ArtworkType.AUDIO,
                           size: 500,
                           artworkFit: BoxFit.cover,
@@ -314,12 +314,12 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
             Expanded(
               child: hasSongs
                   ? ListView.builder(
-                      itemCount: widget.songs!.length,
+                      itemCount: widget.songs.length,
                       itemBuilder: (context, index) {
-                        final song = widget.songs![index];
+                        final song = widget.songs[index];
                         return SongTile(
-                            song: widget.songs![index],
-                            songs: widget.songs!,
+                            song: widget.songs[index],
+                            songs: widget.songs,
                             index: index,
                             onMoreOptions: (context, song) {
                               showModalBottomSheet(
@@ -338,7 +338,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
                                             onPressed: () {
                                               // Logic to remove the song from the playlist
                                               setState(() {
-                                                widget.songs!.removeAt(index);
+                                                widget.songs.removeAt(index);
                                               });
                                               Navigator.pop(context);
                                               ScaffoldMessenger.of(context)
